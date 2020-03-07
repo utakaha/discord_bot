@@ -1,10 +1,10 @@
 class Movie
-  def initialize(title, description, official_site_url, image)
+  def initialize(title:, description:, image_url: nil, official_site_url: nil)
     @title = title
     @description = description
+    @image_url = image_url
     @official_site_url = official_site_url
-    @image = image
   end
 
-  attr_reader :title, :description, :official_site_url, :image
+  attr_reader :title, :description, :image_url, :official_site_url
 end
