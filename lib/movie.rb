@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Movie
   def initialize(title:, description:, image_url: nil, official_site_url: nil)
     @title = title

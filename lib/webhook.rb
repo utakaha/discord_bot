@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/webhooks'
 require 'dotenv/load'
 require './lib/movie_crawler'

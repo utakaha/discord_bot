@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 require 'dotenv/load'
 
 bot = Discordrb::Commands::CommandBot.new(
   token: ENV['TOKEN'],
   client_id: ENV['CLIENT_ID'],
-  prefix:'/',
+  prefix: '/'
 )
 
 bot.command :hello do |event|
