@@ -50,14 +50,15 @@ class MovieCrawler
     sleep 1
 
     jump_url = doc
-               .xpath('//div[@class="movie-details"]'\
-                      '/section[@class="txt-block"]'\
-                      '/a[contains(@class, "official")]')
-               .attr('href')
-               .value
+                 .xpath('//div[@class="movie-details"]'\
+                        '/section[@class="txt-block"]'\
+                        '/a[contains(@class, "official")]')
+                 .attr('href')&.value
 
-    Nokogiri::HTML(URI.open(BASE_URL + jump_url))
-            .xpath('//div[@class="jump-link"]/a')
-            .attr('href').value
+    if jump_url
+      Nokogiri::HTML(URI.open(BASE_URL + jump_url))
+        .xpath('//div[@class="jump-link"]/a')
+        .attr('href').value
+    end
   end
 end
