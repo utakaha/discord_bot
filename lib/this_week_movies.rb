@@ -9,7 +9,11 @@ movie_crawler.run!
 
 client = Discordrb::Webhooks::Client.new(url: ENV['WEBHOOK_URL'])
 client.execute do |builder|
-  builder.content = '今週公開する映画はこちらです😊'
+  builder.content = if movie_crawler.lists.empty?
+                      '今週公開する映画はありませんでした🥺'
+                    else
+                      '今週公開する映画はこちらです😊'
+                    end
 
   movie_crawler.lists.each do |movie|
     builder.add_embed do |embed|
