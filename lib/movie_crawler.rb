@@ -43,7 +43,9 @@ class MovieCrawler
   end
 
   def image_url(doc)
-    doc.xpath('//div[@class="hero-img"]/img').attr('data-src').value
+    attr = doc.xpath('//div[@class="hero-img"]/img').attr('data-src') ||
+           doc.xpath('//div[contains(@class, "hero-img") and contains(@class, "not-size")]/img').attr('data-src')
+    attr.value
   end
 
   def official_site_url(doc)
