@@ -11,7 +11,7 @@ class MovieCrawler
     @lists = []
   end
 
-  attr_reader :lists
+  attr_accessor :lists
 
   def run!
     movie_urls.each do |url|
