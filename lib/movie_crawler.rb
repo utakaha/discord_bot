@@ -9,6 +9,7 @@ require 'discordrb/webhooks'
 class MovieCrawler
   BASE_URL = 'https://eiga.com'
   CLIENT = Discordrb::Webhooks::Client.new(url: ENV['WEBHOOK_URL'])
+  DEBUG_CLIENT = Discordrb::Webhooks::Client.new(url: ENV['DEBUG_WEBHOOK_URL'])
 
   def run!
     lists = movie_urls.map do |url|
@@ -42,6 +43,8 @@ class MovieCrawler
         end
       end
     end
+  rescue StandardError => e
+    DEBUG_CLIENT.execute { |b| b.content = "```#{e.message}\n#{e.backtrace}```" }
   end
 
   private
