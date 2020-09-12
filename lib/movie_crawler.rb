@@ -3,26 +3,44 @@
 require 'open-uri'
 require 'nokogiri'
 require './lib/movie'
+require 'dotenv/load'
+require 'discordrb/webhooks'
 
 class MovieCrawler
   BASE_URL = 'https://eiga.com'
-
-  def initialize
-    @lists = []
-  end
-
-  attr_accessor :lists
+  CLIENT = Discordrb::Webhooks::Client.new(url: ENV['WEBHOOK_URL'])
 
   def run!
-    movie_urls.each do |url|
+    lists = movie_urls.map do |url|
       sleep 1
       doc = Nokogiri::HTML(URI.open(url))
 
-      p movie = Movie.new(
-        title: title(doc), description: description(doc),
-        image_url: image_url(doc), official_site_url: official_site_url(doc)
+      p Movie.new(
+        title: title(doc),
+        description: description(doc),
+        image_url: image_url(doc),
+        official_site_url: official_site_url(doc)
       )
-      lists.push(movie)
+    end
+
+    if lists.empty?
+      CLIENT.execute { |b| b.content = '今週公開する映画はありませんでした🥺' }
+    else
+      CLIENT.execute { |b| b.content = '今週公開する映画はこちらです😊' }
+
+      lists.each_slice(10) do |movies|
+        CLIENT.execute do |builder|
+          movies.each do |movie|
+            builder.add_embed do |embed|
+              embed.title = movie.title
+              embed.description = movie.description
+              embed.url = movie.official_site_url
+              embed.image = Discordrb::Webhooks::EmbedImage.new(url: movie.image_url)
+              embed.timestamp = Time.now
+            end
+          end
+        end
+      end
     end
   end
 
