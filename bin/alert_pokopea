@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'rss'
+require 'dotenv/load'
+require 'discordrb/webhooks'
+
+CLIENT = Discordrb::Webhooks::Client.new(url: ENV['POKOPEA_WEBHOOK_URL'])
+
+urls = [
+  ENV['PEANUTSKUN_ENDPOINT'],
+  ENV['PONPOKO_ENDPOINT'],
+  ENV['POKOPEA_ENDPOINT']
+]
+
+CLIENT.execute do |builder|
+  urls.each do |url|
+    rss = RSS::Parser.parse(url)
+
+    rss.items.each do |item|
+      builder.add_embed do |embed|
+        embed.title = item.title.content
+        embed.description = item.content.content
+        embed.url = item.link.href
+        embed.timestamp = item.updated.content
+      end
+    end
+  rescue RSS::MissingTagError => e
+    puts "#{e.class}: #{e.message}"
+  end
+end
