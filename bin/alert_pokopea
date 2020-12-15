@@ -30,10 +30,10 @@ if items.any?
   CLIENT.execute do |builder|
     items.each do |item|
       builder.add_embed do |embed|
-        embed.title = item.title
-        embed.description = item.description
-        embed.url = item.url
-        embed.timestamp = item.timestamp
+        embed.title = item[:title]
+        embed.description = item[:description]
+        embed.url = item[:url]
+        embed.timestamp = item[:timestamp]
       end
     end
   end
